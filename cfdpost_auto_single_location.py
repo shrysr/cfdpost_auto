@@ -4,7 +4,8 @@ Created on Thu Dec 18 16:10:49 2014
 
 @author: Shreyas Ragavan
 """
-# This program basically allows the user to apply a single ANSYS CFD Post state/session file on multiple result files in a location, one after the other.
+# This program basically enables the user to apply a single ANSYS CFD Post state/session file on multiple result files in a single location, one after the other.
+# The following details are required from the User for the program to work. 
 
 ###---------- USER INPUT -------------###
 
@@ -26,10 +27,10 @@ import time as t
 import glob
 import subprocess as sp
 
-#Creating BAT script for extracting the list of res files in the current working folder - sorted Date wise
+# Extracting the list of res files in the current working folder - sorted Date wise. Passing the stored list to the next function.
 def res_list_syn():
     print ""
-    print "Grabbing all res files from chosen location."
+    print "Grabbing res files list from chosen location. (Res_loc)"
     os.chdir(Res_loc)
     variableA1=glob.glob('*.res')
     post_syn(variableA1)
@@ -38,7 +39,7 @@ def post_syn(variable):
     print " "    
     print "Listing grabbed res files and creating Post BAT file in chosen location..." 
     print ""
-    post_batname='Post_bat_runner.BAT'   
+    post_batname='Post_bat_runner.BAT'
     post_bat_loc=os.path.join(Res_loc,post_batname)
     PC=open(post_bat_loc,'w')
     PC.write('cd /d "%s"\n'%Res_loc)

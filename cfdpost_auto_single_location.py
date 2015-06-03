@@ -1,45 +1,57 @@
-# -*- coding: utf-8 -*-
 """
 Created on Thu Dec 18 16:10:49 2014
 
-@author: Shreyas Ragavan
+@author: shrysr
 """
-# This program basically enables the user to apply a single ANSYS CFD Post state/session file on multiple result files in a single location, one after the other.
-# The following details are required from the User for the program to work. 
+
+# Description: 
+# This is a simple program that is designed to apply am ANSYS CFD post macro on all the results available at a particular location, one after the other. There are 3 strings required to be set as input by the user.
+# 1. The location of the ANSYS CFD Post executable
+# 2. THe path to the macro file (.cst/.cse)
+# 3. The folder location where the result files are located.
+
+# Note : the >quit command can be written in the post macro to optionally execute the post macro on one file after the other automatically. Otherwise CFD Post has to be quit manually by the user after the macro is applied on each file.
 
 ###---------- USER INPUT -------------###
+# Setting the paths to various locations.
 
-#Enter the path to the location of the CFD Post executable in the ANSYS installation location
-CFDPost_loc=r'"C:\Program Files\ANSYS Inc\v145\CFD-Post\bin\cfdpost"'
+CFDPost_loc=r'"C:\Program Files\ANSYS Inc\v145\CFD-Post\bin\cfdpost"' #Setting the path to the ANSYS CFD Post executable.
 
-#Enter the path to the location of the ANSYS CFD Post session (.cse) or state (.cst) file
-Post_template_loc=r'"C:\Post_Processing_Templates\FP_session_v13_TEST_2.cse"'
+Post_template_loc=r'"C:\\example_location\post_macro.cse"' #Path to the .cse/.cst post macro to be applied.
 
-#Enter the location of all the result files
-Res_loc=r'Q:\Queueing_sys\Completed\'
-
+Res_loc=r"Q:\Queueing_sys\Completed\Archive\Shreyas" #Folder location of the result file path
 
 ###---x---x--x-- USER INPUT -x---x---x---x--###
 
 #importing required libraries
 import os
-import time as t
 import glob
 import subprocess as sp
 
-# Extracting the list of res files in the current working folder - sorted Date wise. Passing the stored list to the next function.
-def res_list_syn():
+#Creating BAT script for extracting the list of res files in the current working folder - sorted Date wise
+def res_list_syn(Res_loc):
+    """
+    Grabs all the CFX res files in the chosen location  (Res_loc) and stores them in the variable (array) A1.
+    The variableA1 is passed onto another function which uses the array contents
+
+    Example:
+    >>> Res_loc="Q:\Queueing_sys\Completed\Archive"
+    >>> post_syn(Res_loc)
+    >>> return variableA1
+
+    """
     print ""
-    print "Grabbing res files list from chosen location. (Res_loc)"
+    print "Grabbing all res files from chosen location."
     os.chdir(Res_loc)
-    variableA1=glob.glob('*.res')
-    post_syn(variableA1)
+    reslist=glob.glob('*.res')
+    print "Passing the list of res files to the Post_Syn function"
+    post_syn(reslist)
     
 def post_syn(variable):
     print " "    
     print "Listing grabbed res files and creating Post BAT file in chosen location..." 
     print ""
-    post_batname='Post_bat_runner.BAT'
+    post_batname='Post_bat_runner.BAT'   
     post_bat_loc=os.path.join(Res_loc,post_batname)
     PC=open(post_bat_loc,'w')
     PC.write('cd /d "%s"\n'%Res_loc)
@@ -59,15 +71,17 @@ def post_syn(variable):
     
 
 #Function for deleting temp Files. Prevents Clutter.
-def File_killer(variable1, variable2):
-    for variable in glob.glob('%s/*.%s'%(variable1,variable2)):
+def File_killer(folder_location, type_of_extension):
+    for variable in glob.glob('%s/*.%s'%(folder_location,type_of_extension)):
         if os.path.isfile(variable):
             os.remove(variable)
 
 #Starting Program. Geting current working directory
-print "Hello. Program Launch... Getting Current working directory.-->"
+print "Hello. Program Launch...-->"
 print ""
-currentwd=os.getcwd()
-print "Current working directory is : %s"%currentwd
+print "The chosen result location to be scanned is: %s"%Res_loc
 print ""
-res_list_syn()
+print "Starting scan"
+res_list_syn(Res_loc)
+
+res_list_syn

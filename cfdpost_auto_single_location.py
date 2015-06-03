@@ -83,5 +83,3 @@ print "The chosen result location to be scanned is: %s"%Res_loc
 print ""
 print "Starting scan"
 res_list_syn(Res_loc)
-
-res_list_syn

@@ -35,7 +35,7 @@ def res_list_syn(Res_loc):
     The variableA1 is passed onto another function which uses the array contents
 
     Example:
-    >>> Res_loc="Q:\Queueing_sys\Completed\Archive"
+    >>> Res_loc=r"Q:\Queueing_sys\Completed\Archive"
     >>> post_syn(Res_loc)
     >>> return variableA1
 
